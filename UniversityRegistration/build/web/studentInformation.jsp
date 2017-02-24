@@ -15,7 +15,7 @@
 
 <body>
     <h1>Welcome, Student ID ${professor.ID}</h1>
-    <h1>Welcome, Student password ${professor.password}</h1>
+    <h1>Welcome, Student password ${student.password}</h1>
 
     <p>This is the table for the courses in which you enrolled.</p>
     <p>You can delete the ones which do not have a grade.</p>
@@ -54,7 +54,8 @@
 <!--                <input type=button value="View and Set Transcript"
                        onclick="javascript:window.open('professorCourseDetails.jsp?crscode=${course.crsCode}','_self');return;">-->
                 <form action="emailList" method="post">
-                    <input type="hidden" name="crscode" value=${course.crsCode}>  
+                    <input type="hidden" name="crscode" value=${object[0]}>
+                    <input type="hidden" name="id" value=${professor.ID}> 
                     <input type="submit" name="act" value="Delete">
                 </form>
             </td>
@@ -66,6 +67,7 @@
     
     <form action="emailList" method="post">
         <input type="hidden" name="action" value="join">
+        <input type="hidden" name="id" value=${professor.ID}> 
         <input type="submit" name="act" value="Search Course">
         <input type="submit" name="act" value="Logout">
     </form>

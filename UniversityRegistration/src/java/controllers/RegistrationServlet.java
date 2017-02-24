@@ -118,6 +118,7 @@ public class RegistrationServlet extends HttpServlet
                 Professor professor = new Professor(id,password, "na", "na");
                 List<Course> courseList = null;
                 
+                Student student = new Student(id,password, "na", "na");
                 List<Object> objectList = null;
                 
                 // validate the parameters
@@ -139,6 +140,7 @@ public class RegistrationServlet extends HttpServlet
 
                 // store the User object in request and set URL
                 request.setAttribute("professor", professor);
+                request.setAttribute("student", student);
                 request.setAttribute("courseList", courseList);
                 request.setAttribute("objectList", objectList);
                 request.setAttribute("message", message);
@@ -158,20 +160,70 @@ public class RegistrationServlet extends HttpServlet
             }
             
             if(act.equals("Search Course")) {
+                String id = request.getParameter("id");
+                
                 url = "/searchCourses.jsp";
+                
+                request.setAttribute("id", id);
             }
             
             if(act.equals("submit")) {
                 // get parameters from the request
                 String crsCode = request.getParameter("crsCode");
+                String crsName = request.getParameter("crsName");
+                String deptId = request.getParameter("deptId");
+                String name = request.getParameter("name");
+                
+                String id = request.getParameter("id");
 
                 // use regular Java classes
-                List<Course> courseList= ProfessorDB.searchCourse(crsCode);
+                List<Course> courseList= ProfessorDB.searchCourse(crsCode, crsName, deptId, name);
                 
                 url = "/searchResults.jsp";
 
                 // store the User object in request and set URL
                 request.setAttribute("courseList", courseList);
+                request.setAttribute("id", id);
+            }
+            
+            if(act.equals("submitGrade")) {
+                // get parameters from the request
+                String crscode = request.getParameter("crscode");
+                
+                java.util.Enumeration eu = request.getParameterNames();
+                
+                while(eu.hasMoreElements()) {
+                    String stu =""+ eu.nextElement();
+                    if(stu.startsWith("stu_")) {
+                        stu = stu.substring(4);
+                        String score=request.getParameter("stu_"+stu);
+                        ProfessorDB.updateGrade(score, crscode, stu);
+                    }
+                }
+                
+                url = "/success.jsp";
+            }
+            
+            if(act.equals("Select")) {
+                // get parameters from the request
+                String crsCode = request.getParameter("crscode");
+                String id = request.getParameter("id");
+
+                // use regular Java classes
+                ProfessorDB.selectCourse(crsCode, id);
+                
+                url = "/success.jsp";
+            }
+            
+            if(act.equals("Delete")) {
+                // get parameters from the request
+                String crsCode = request.getParameter("crscode");
+                String id = request.getParameter("id");
+
+                // use regular Java classes
+                ProfessorDB.deleteCourse(crsCode, id);
+                
+                url = "/success.jsp";
             }
             
             if(act.equals("Logout")) {

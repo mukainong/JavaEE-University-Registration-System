@@ -14,6 +14,7 @@
 </head>
 
 <body>
+    <h1>Welcome, Student ID ${id}</h1>
     <h1>Searched results:</h1>
     
     <table border="8" style="width:800px">
@@ -45,6 +46,7 @@
                        onclick="javascript:window.open('professorCourseDetails.jsp?crscode=${course.crsCode}','_self');return;">-->
                 <form action="emailList" method="post">
                     <input type="hidden" name="crscode" value=${course.crsCode}>  
+                    <input type="hidden" name="id" value=${id}> 
                     <input type="submit" name="act" value="Select">
                 </form>
             </td>

@@ -13,11 +13,13 @@
     <link rel="stylesheet" href="styles/main.css" type="text/css"/>
 </head>
 <body>
+    <h1>Welcome, Student ID ${id}</h1>
     <h1>Search a course</h1>
     <p>Fill in none or some of the blanks below to search a course:</p>
 
     <form action="emailList" method="post">
-        <input type="hidden" name="action" value="add">  
+        <input type="hidden" name="action" value="add">
+        <input type="hidden" name="id" value=${id}> 
         
         <label class="pad_top">Course Code:</label>
         <input type="text" name="crsCode"><br>

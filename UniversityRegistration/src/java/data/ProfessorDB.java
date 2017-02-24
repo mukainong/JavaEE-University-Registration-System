@@ -146,12 +146,150 @@ public class ProfessorDB {
         }
     }
     
-    public static List<Course> searchCourse(String crscode) {
+    public static List<Course> searchCourse(String crscode, String crsname, String deptId, String name) {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        String qString = "SELECT c FROM Course c "+
-                "WHERE c.CrsCode = :crscode";
+        String qString = "";
+        
+        if(!crscode.equals(""))
+        {
+            if(!crsname.equals(""))
+            {
+                if(!deptId.equals(""))
+                {
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                    "WHERE c.CrsCode = '" + crscode + "' " +
+                                    "AND c.DeptID = '" + deptId + "' " +
+                                    "AND c.CrsName = '" + crsname + "' " +
+                                    "AND c.InsNo = '" + name + "' ");
+                    }
+                    else
+                    {
+                        qString = ("select c from Course c " +
+                                    "WHERE c.CrsCode = '" + crscode + "' " +
+                                    "AND c.DeptID = '" + deptId + "' " +
+                                    "AND c.CrsName = '" + crsname + "' ");
+                    }
+                }
+                else
+                {
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                    "WHERE c.CrsCode = '" + crscode + "' " +
+                                    "AND c.CrsName = '" + crsname + "' " +
+                                    "AND c.InsNo = '" + name + "' ");
+                    }
+                    else 
+                    {
+                        qString = ("select c from Course c " +
+                                    "WHERE c.CrsCode = '" + crscode + "' " +
+                                    "AND c.CrsName = '" + crsname + "' ");
+                    }
+                }
+            }
+            else // CrsName is null
+            {
+                if(!deptId.equals(""))
+                {
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.CrsCode = '" + crscode + "' " +
+                                        "AND c.DeptID = '" + deptId + "' " +
+                                        "AND c.InsNo = '" + name + "' ");
+                    }
+                    else 
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.CrsCode = '" + crscode + "' " +
+                                        "AND c.DeptID = '" + deptId + "' ");
+                    }
+                }
+                else
+                {   
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.CrsCode =  '" + crscode + "' " +
+                                        "AND c.InsNo = '" + name + "' ");
+                    }
+                    else
+                    {
+                     qString = ("select c from Course c " +
+                                        "WHERE c.CrsCode =  '" + crscode + "' ");   
+                    }
+                }
+            }
+        }
+        else  // CrsCode is null
+        {
+            if(!crsname.equals(""))
+            {
+                if(!deptId.equals(""))
+                {
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.DeptID = '" + deptId + "' " +
+                                        "AND c.CrsName = '" + crsname + "' " +
+                                        "AND c.InsNo = '" + name + "' ");
+                    }
+                    else
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.DeptID = '" + deptId + "' " +
+                                        "AND c.CrsName = '" + crsname + "' ");
+                    }
+                }
+                else
+                {
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.CrsName = '" + crsname + "' " +
+                                        "AND c.InsNo = '" + name + "' ");
+                    }
+                    else
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.CrsName = '" + crsname + "' ");
+                    }
+                }
+            }
+            else // CrsName is null
+            {
+                if(!deptId.equals(""))
+                {
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.DeptID = '" + deptId + "' " +
+                                        "AND c.InsNo = '" + name + "' ");
+                    }
+                    else
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.DeptID = '" + deptId + "' ");
+                    }
+                }
+                else
+                {
+                    if(!name.equals(""))
+                    {
+                        qString = ("select c from Course c " +
+                                        "WHERE c.InsNo = '" + name + "' ");
+                    }
+                    else
+                    {
+                        qString = ("select c from Course c ");
+                    }
+                }
+            }
+        }
+        
         TypedQuery<Course> q = em.createQuery(qString, Course.class);
-        q.setParameter("crscode", crscode);
         try {
             List<Course> list = q.getResultList();
             return list;
@@ -200,6 +338,58 @@ public class ProfessorDB {
             return list;
         } catch (NoResultException e) {
             return null;
+        } finally {
+            em.close();
+        }
+    }
+    
+    public static void updateGrade(String score, String crscode, String stu) {
+//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+//        Transcript t= (Transcript)em.find(Transcript.class , 1);
+//
+//        String qString = "update Transcript t set t.Grade='"+score.trim()+"' where t.CrsCode='"+crscode.trim()+"' and t.StudId='"+stu.trim()+"'";
+//        String qString = "update Transcript set Grade = 'B' where CrsCode = 101 and StudId = 'stud1'";
+//        em.createNativeQuery(qString).executeUpdate();
+        
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.createNativeQuery("update Transcript t set t.Grade='"+score.trim()+"' where t.CrsCode='"+crscode.trim()+"' and t.StudId='"+stu.trim()+"'").executeUpdate();
+        et.commit();
+        try {
+            
+        } catch (NoResultException e) {
+            
+        } finally {
+            em.close();
+        }
+    }
+    
+    public static void selectCourse(String crscode, String id) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.createNativeQuery("Insert into Transcript VALUES ('" + id + "','" + crscode + "','FALL2016','')").executeUpdate();
+        et.commit();
+        try {
+            
+        } catch (NoResultException e) {
+            
+        } finally {
+            em.close();
+        }
+    }
+    
+    public static void deleteCourse(String crscode, String id) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.createNativeQuery("delete from Transcript where CrsCode='"+crscode+"' and StudId='"+id+"'").executeUpdate();
+        et.commit();
+        try {
+            
+        } catch (NoResultException e) {
+            
         } finally {
             em.close();
         }

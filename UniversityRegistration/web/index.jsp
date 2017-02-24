@@ -23,7 +23,7 @@
         <label class="pad_top">User ID:</label>
         <input type="text" name="id"><br>
         <label class="pad_top">Password:</label>
-        <input type="text" name="password"><br>
+        <input type="password" name="password"><br>
         <label>&nbsp;</label>
         <input type="submit" name="act" value="Register" class="margin_left">
         <input type="submit" name="act" value="Login" class="margin_left">
